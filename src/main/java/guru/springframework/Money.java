@@ -11,7 +11,7 @@ public class Money {
         this.currency = currency;
     }
 
-    protected String currency() {
+    protected String currencyToString() {
         return this.currency;
     }
 
