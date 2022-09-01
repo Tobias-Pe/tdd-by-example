@@ -2,28 +2,46 @@ package guru.springframework;
 
 import java.util.Objects;
 
-public abstract class Money {
+public class Money {
     protected int amount;
+    protected final String currency;
+
+    public Money(int amount, String currency) {
+        this.amount = amount;
+        this.currency = currency;
+    }
+
+    protected String currency() {
+        return this.currency;
+    }
+
+    public Money times(int multiplier) {
+        return new Money(this.amount * multiplier, this.currency);
+    }
 
     public static Money dollar(int amount) {
-        return new Dollar(amount);
+        return new Money(amount, "USD");
     }
-
-    public abstract Money times(int multiplier);
 
     public static Money franc(int amount) {
-        return new Franc(amount);
+        return new Money(amount, "CHF");
     }
 
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Money)) return false;
         Money money = (Money) o;
-        return amount == money.amount && this.getClass().equals(o.getClass());
+        return this.amount == money.amount && Objects.equals(this.currency, money.currency);
     }
 
     @Override
+    public String toString() {
+        return "Money{" +
+            "amount=" + amount +
+            ", currency='" + currency + '\'' +
+            '}';
+    }
+
     public int hashCode() {
         return Objects.hash(amount);
     }
