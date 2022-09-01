@@ -2,8 +2,8 @@ package guru.springframework;
 
 import java.util.Objects;
 
-public class Money {
-    protected int amount;
+public class Money implements Expression {
+    protected final int amount;
     protected final String currency;
 
     public Money(int amount, String currency) {
@@ -15,7 +15,7 @@ public class Money {
         return this.currency;
     }
 
-    public Money times(int multiplier) {
+    public Expression times(int multiplier) {
         return new Money(this.amount * multiplier, this.currency);
     }
 
@@ -42,7 +42,13 @@ public class Money {
             '}';
     }
 
-    public int hashCode() {
-        return Objects.hash(amount);
+    @Override
+    public Expression plus(Expression money) {
+        return new Sum(this, money);
+    }
+
+    @Override
+    public Money reduce(Bank bank, String to) {
+        return new Money(this.amount / bank.rate(this.currency, to), to);
     }
 }
